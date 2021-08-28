@@ -7,12 +7,15 @@ import (
 	"github.com/subosito/gotenv"
 )
 
+var appConfig *Config
+
 type Config struct {
 	AppName     string
-	AppPort     int
+	AppPort     string
 	LogLevel    string
 	Environment string
 	JWTSecret   string
+	JWTExpired  int
 }
 
 func Init() *Config {
@@ -24,13 +27,22 @@ func Init() *Config {
 
 	log.SetOutput(os.Stdout)
 
-	appConfig := &Config{
+	appConfig = &Config{
 		AppName:     GetString("APP_NAME"),
-		AppPort:     GetInt("APP_PORT"),
+		AppPort:     GetString("APP_PORT"),
 		LogLevel:    GetString("LOG_LEVEL"),
 		Environment: GetString("ENVIRONMENT"),
-		JWTSecret:   GetString("JWT_SECRET"),
+		JWTSecret:   GetString("JWT_SECRET_KEY"),
+		JWTExpired:  GetInt("JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT"),
 	}
 
 	return appConfig
+}
+
+func GetJWTSecret() string {
+	return appConfig.JWTSecret
+}
+
+func GetJWTExp() int {
+	return appConfig.JWTExpired
 }

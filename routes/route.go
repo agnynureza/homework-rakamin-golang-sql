@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/agnynureza/homework-rakamin-golang-sql/handlers"
+	"github.com/agnynureza/homework-rakamin-golang-sql/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -18,15 +19,11 @@ func NewRoutes(movieHandler handlers.MovieHandlerInterface, tokenHandler handler
 }
 
 func (r *Routes) InitializeRoutes(a *fiber.App) {
+	moviesRoute := a.Group("/movie")
 	// movies route
-	// route.Post("/book", middleware.JWTProtected(), b.BookController.CreateBook)
-	// route.Post("/book/:id/upload-image", middleware.JWTProtected(), b.BookController.UploadBookImage)
-	// route.Get("/books", middleware.JWTProtected(), b.BookController.GetBooks)
-	// route.Get("/book/:id", middleware.JWTProtected(), b.BookController.GetBookByID)
-	// route.Put("/book", middleware.JWTProtected(), b.BookController.UpdateBook)
-	// route.Delete("/book", middleware.JWTProtected(), b.BookController.DeleteBook)
+	moviesRoute.Post("/", middleware.JWTProtected(), r.movieHandler.PostNewMovies)
+	moviesRoute.Get("/:title", middleware.JWTProtected(), r.movieHandler.GetMovieByTitle)
 
 	// login
-	//a.Get("/login")
-	//route.Get("/login", b.BookController.GetNewAccessToken)
+	a.Get("/login", r.tokenHandler.GetNewAccessToken)
 }

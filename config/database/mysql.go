@@ -1,6 +1,7 @@
 package database
 
 import (
+	"log"
 	"time"
 
 	"github.com/agnynureza/homework-rakamin-golang-sql/config"
@@ -28,6 +29,7 @@ func InitDb() *gorm.DB {
 	sqlDB.SetConnMaxLifetime(time.Duration(maxLifetimeConn))
 
 	InitCreateTable(db)
+	log.Println("Database Connect 🚀")
 
 	return db
 }
@@ -38,5 +40,5 @@ func InitCreateTable(db *gorm.DB) {
 		return
 	}
 
-	db.AutoMigrate(&models.Movies{})
+	db.AutoMigrate(&models.TableMovies{})
 }

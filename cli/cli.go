@@ -54,8 +54,7 @@ func (c *Cli) Run(application *app.Application) {
 	moviesHandlers := handlers.NewMoviesHandler(moviesService)
 
 	// token services
-	tokensService := services.TokenService{}
-	tokensHandlers := handlers.NewTokenHandler(tokensService)
+	var tokensHandlers = &handlers.TokenHandler{}
 
 	// register handler to Routes
 	routes := route.NewRoutes(moviesHandlers, tokensHandlers)
@@ -64,12 +63,14 @@ func (c *Cli) Run(application *app.Application) {
 	//not found routes
 	route.NotFoundRoute(app)
 
-	StartServerWithGracefulShutdown(app)
+	log.Println(fmt.Sprintf("starting application { %v } on port :%s", application.Config.AppName, application.Config.AppPort))
 
-	log.Println(fmt.Sprintf("starting application { %v } on port :%v", application.Config.AppName, application.Config.AppPort))
+	StartServerWithGracefulShutdown(app, application.Config.AppPort)
+
 }
 
-func StartServerWithGracefulShutdown(a *fiber.App) {
+func StartServerWithGracefulShutdown(a *fiber.App, port string) {
+	appPort := fmt.Sprintf(`:%s`, port)
 	idleConnsClosed := make(chan struct{})
 
 	go func() {
@@ -85,9 +86,11 @@ func StartServerWithGracefulShutdown(a *fiber.App) {
 	}()
 
 	// Run server.
-	if err := a.Listen(os.Getenv("SERVER_URL")); err != nil {
+	if err := a.Listen(appPort); err != nil {
 		log.Printf("Oops... Server is not running! Reason: %v", err)
 	}
 
 	<-idleConnsClosed
 }
+
+
