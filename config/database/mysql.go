@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/agnynureza/homework-rakamin-golang-sql/config"
+	"github.com/agnynureza/homework-rakamin-golang-sql/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -26,5 +27,16 @@ func InitDb() *gorm.DB {
 	sqlDB.SetMaxOpenConns(maxConn)
 	sqlDB.SetConnMaxLifetime(time.Duration(maxLifetimeConn))
 
+	InitCreateTable(db)
+
 	return db
+}
+
+func InitCreateTable(db *gorm.DB) {
+	tableExists := db.Migrator().HasTable("movies")
+	if tableExists {
+		return
+	}
+
+	db.AutoMigrate(&models.Movies{})
 }
