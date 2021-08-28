@@ -20,9 +20,12 @@ func NewRoutes(movieHandler handlers.MovieHandlerInterface, tokenHandler handler
 
 func (r *Routes) InitializeRoutes(a *fiber.App) {
 	moviesRoute := a.Group("/movie")
+
 	// movies route
 	moviesRoute.Post("/", middleware.JWTProtected(), r.movieHandler.PostNewMovies)
-	moviesRoute.Get("/:title", middleware.JWTProtected(), r.movieHandler.GetMovieByTitle)
+	moviesRoute.Get("/:slug", middleware.JWTProtected(), r.movieHandler.GetMovieBySlug)
+	moviesRoute.Put("/:slug", middleware.JWTProtected(), r.movieHandler.PutMovie)
+	moviesRoute.Delete("/:slug", middleware.JWTProtected(), r.movieHandler.DeleteMovieBySlug)
 
 	// login
 	a.Get("/login", r.tokenHandler.GetNewAccessToken)
