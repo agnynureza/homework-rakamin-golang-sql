@@ -8,12 +8,12 @@ import (
 )
 
 func GenerateNewAccessToken() (string, error) {
-	secret := config.GetJWTSecret()
-	minutesCount := config.GetJWTExp()
+	secret := config.GetString("JWT_SECRET_KEY")
+	daysCount := config.GetInt("JWT_SECRET_KEY_EXPIRE_DAYS_COUNT")
 
 	claims := jwt.MapClaims{}
 
-	claims["exp"] = time.Now().Add(time.Minute * time.Duration(minutesCount)).Unix()
+	claims["exp"] = time.Now().AddDate(0, 0, daysCount).Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 

@@ -37,6 +37,7 @@ func (m *MoviesHandler) PostNewMovies(c *fiber.Ctx) error {
 			"msg":   err.Error(),
 		})
 	}
+
 	validate := utils.NewValidator()
 	if err := validate.Struct(movie); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
