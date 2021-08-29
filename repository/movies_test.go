@@ -2,6 +2,8 @@ package repository
 
 import (
 	"database/sql"
+	"log"
+	"os"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -18,19 +20,22 @@ var (
 	err  error
 )
 
-func InitMockDB(t *testing.T) {
+func TestMain(m *testing.M) {
 	db, mock, err = sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
 	if err != nil {
-		t.Fatalf("Error initialize DATA-DOG : %v", err)
+		log.Fatalf("Error initialize DATA-DOG : %v", err)
 	}
-	gormDB, _ := gorm.Open(mysql.New(mysql.Config{Conn: db}), &gorm.Config{})
+	gormDB, _ := gorm.Open(mysql.New(mysql.Config{Conn: db, SkipInitializeWithVersion: true}), &gorm.Config{})
 	repo = NewMoviesRepository(gormDB)
+
+	exitVal := m.Run()
+
+	defer db.Close()
+
+	os.Exit(exitVal)
 }
 
 func TestMoviesRepository_CreateMovie(t *testing.T) {
-	InitMockDB(t)
-	defer db.Close()
-
 	t.Run("should return success", func(t *testing.T) {
 		inputMovie := models.Movies{
 			Title:       "Titanic",
@@ -55,11 +60,9 @@ func TestMoviesRepository_CreateMovie(t *testing.T) {
 }
 
 func TestMoviesRepository_GetOneMovie(t *testing.T) {
-	InitMockDB(t)
-	defer db.Close()
-
 	t.Run("should return success", func(t *testing.T) {
 		ouputMovieDetail := models.Movies{
+			ID:          1,
 			Title:       "Titanic",
 			Slug:        "titanic",
 			Description: "lorem ipsum",
@@ -71,8 +74,8 @@ func TestMoviesRepository_GetOneMovie(t *testing.T) {
 
 		mock.ExpectQuery(queryExpected).
 			WithArgs(inputSlug).
-			WillReturnRows(sqlmock.NewRows([]string{"title", "Slug", "Description", "Duration", "Image"}).
-				AddRow(ouputMovieDetail.Title, ouputMovieDetail.Slug, ouputMovieDetail.Description, ouputMovieDetail.Duration, ouputMovieDetail.Image)).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "title", "Slug", "Description", "Duration", "Image"}).
+				AddRow(ouputMovieDetail.ID, ouputMovieDetail.Title, ouputMovieDetail.Slug, ouputMovieDetail.Description, ouputMovieDetail.Duration, ouputMovieDetail.Image)).
 			WillReturnError(nil)
 
 		actual, err := repo.GetOneMovie(inputSlug)
@@ -82,9 +85,6 @@ func TestMoviesRepository_GetOneMovie(t *testing.T) {
 }
 
 func TestMoviesRepository_UpdateMovie(t *testing.T) {
-	InitMockDB(t)
-	defer db.Close()
-
 	t.Run("should return success", func(t *testing.T) {
 		inputMovie := models.Movies{
 			Title:       "Titanic version 2",
@@ -106,9 +106,6 @@ func TestMoviesRepository_UpdateMovie(t *testing.T) {
 }
 
 func TestMoviesRepository_DeleteMovie(t *testing.T) {
-	InitMockDB(t)
-	defer db.Close()
-
 	t.Run("should return success", func(t *testing.T) {
 		inputSlug := "titanic"
 		queryExpected := "DELETE FROM `movies` WHERE slug = ?"

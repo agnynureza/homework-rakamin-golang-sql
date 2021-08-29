@@ -112,6 +112,14 @@ func (m *MoviesHandler) PutMovie(c *fiber.Ctx) error {
 				"msg":   err.Error(),
 			})
 		}
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"error": true,
+				"msg":   "data not found",
+			})
+		}
+
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": true,
 			"msg":   err.Error(),
@@ -135,7 +143,6 @@ func (m *MoviesHandler) DeleteMovieBySlug(c *fiber.Ctx) error {
 				"msg":   "data not found",
 			})
 		}
-
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": true,
 			"msg":   err.Error(),
@@ -143,7 +150,7 @@ func (m *MoviesHandler) DeleteMovieBySlug(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"error":  false,
-		"result": "success",
+		"error": false,
+		"msg":   "success",
 	})
 }

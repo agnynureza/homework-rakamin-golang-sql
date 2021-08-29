@@ -3,7 +3,6 @@ package repository
 import (
 	"github.com/agnynureza/homework-rakamin-golang-sql/models"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 type MoviesRepository struct {
@@ -49,9 +48,13 @@ func (r *MoviesRepository) GetOneMovie(slug string) (models.Movies, error) {
 
 func (r *MoviesRepository) UpdateMovie(payload *models.Movies, slug string) error {
 	query := `UPDATE movies SET title = ?, description = ?, duration = ?, image = ?, slug = ? WHERE slug = ?`
-	err := r.db.Exec(query, payload.Title, payload.Description, payload.Duration, payload.Image, payload.Slug, slug).Error
-	if err != nil {
-		return err
+	result := r.db.Exec(query, payload.Title, payload.Description, payload.Duration, payload.Image, payload.Slug, slug)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
 	}
 
 	return nil
@@ -65,7 +68,7 @@ func (r *MoviesRepository) DeleteMovie(slug string) error {
 	}
 
 	if result.RowsAffected == 0 {
-		return logger.ErrRecordNotFound
+		return gorm.ErrRecordNotFound
 	}
 
 	return nil
