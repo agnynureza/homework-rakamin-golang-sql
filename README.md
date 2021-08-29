@@ -117,7 +117,7 @@ status code: 200
 ### Tech Stack
 * [Golang] - programming language
 * [Fiber] - web framework with zero memory allocation and performance
-* [Gomock] -  browser tool for SQL queries where you can create, read, update and delete data directly from your web browser
+* [Gomock] - mocking framework for the Go programming language.
 * [JsonWebToken] - Authorization and Authentication 
 
 
