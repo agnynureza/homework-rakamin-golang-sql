@@ -13,9 +13,9 @@ type TableMovies struct {
 
 type Movies struct {
 	ID          int    `gorm:"column:id; PRIMARY_KEY" json:"id"`
-	Title       string `gorm:"column:title" json:"title"`
-	Slug        string `gorm:"column:slug" json:"Slug"`
-	Description string `gorm:"column:description" json:"Description"`
-	Duration    uint   `gorm:"column:duration" json:"Duration"`
-	Image       string `gorm:"column:image" json:"Image"`
+	Title       string `gorm:"column:title" json:"title" validate:"required"`
+	Slug        string `gorm:"column:slug" json:"Slug" validate:"required"`
+	Description string `gorm:"column:description" json:"Description" validate:"required"`
+	Duration    uint   `gorm:"column:duration" json:"Duration" validate:"required"`
+	Image       string `gorm:"column:image" json:"Image" validate:"required"`
 }

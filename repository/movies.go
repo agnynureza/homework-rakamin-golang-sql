@@ -40,6 +40,10 @@ func (r *MoviesRepository) GetOneMovie(slug string) (models.Movies, error) {
 		return movie, err
 	}
 
+	if movie.ID == 0 {
+		return movie, gorm.ErrRecordNotFound
+	}
+
 	return movie, nil
 }
 

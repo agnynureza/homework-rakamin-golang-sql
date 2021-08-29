@@ -64,18 +64,18 @@ func (mr *MockMovieServiceInterfaceMockRecorder) DeleteMovie(slug interface{}) *
 }
 
 // GetMovie mocks base method.
-func (m *MockMovieServiceInterface) GetMovie(title string) (models.Movies, error) {
+func (m *MockMovieServiceInterface) GetMovie(slug string) (models.Movies, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetMovie", title)
+	ret := m.ctrl.Call(m, "GetMovie", slug)
 	ret0, _ := ret[0].(models.Movies)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetMovie indicates an expected call of GetMovie.
-func (mr *MockMovieServiceInterfaceMockRecorder) GetMovie(title interface{}) *gomock.Call {
+func (mr *MockMovieServiceInterfaceMockRecorder) GetMovie(slug interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMovie", reflect.TypeOf((*MockMovieServiceInterface)(nil).GetMovie), title)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMovie", reflect.TypeOf((*MockMovieServiceInterface)(nil).GetMovie), slug)
 }
 
 // UpdateMovie mocks base method.

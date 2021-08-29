@@ -78,7 +78,7 @@ func (m *MoviesHandler) GetMovieBySlug(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"error":  false,
 		"msg":    "success retrieve data",
 		"result": response,
@@ -118,7 +118,7 @@ func (m *MoviesHandler) PutMovie(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"error":  false,
 		"msg":    "success update data",
 		"result": response,

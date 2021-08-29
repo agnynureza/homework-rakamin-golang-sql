@@ -17,7 +17,7 @@ func NewMoviesService(movieRepo repository.MovieRepoInterface) *MoviesService {
 
 type MovieServiceInterface interface {
 	CreateNewMovie(movie *models.Movies) (*models.Movies, error)
-	GetMovie(title string) (models.Movies, error)
+	GetMovie(slug string) (models.Movies, error)
 	UpdateMovie(movie *models.Movies, slug string) (models.Movies, error)
 	DeleteMovie(slug string) error
 }
