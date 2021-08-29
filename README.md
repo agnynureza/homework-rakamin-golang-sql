@@ -4,7 +4,8 @@
 1. clone this repository
 2. type ```make run``` to run the apps
 3. Hit the Server `localhost:8000/movies/titanic`
-4. let's Rock !! 🚀
+4. Unit Test ```make coverage```
+5. see coverage all test in html ```make coverage-out```
 
 ### Tasks 
 We define routes for handling operations:
